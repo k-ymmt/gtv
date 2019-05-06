@@ -1,0 +1,9 @@
+[package]
+name = "gtv"
+version = "0.1.0"
+authors = ["k-yamamoto <k.yamamoto@fenrir.co.jp>"]
+edition = "2018"
+
+[dependencies]
+git2 = "0.8"
+termion = "1.5.2"
