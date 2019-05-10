@@ -1,14 +1,20 @@
-use crate::app::screen::Screen;
+use crate::app::screen::{Screen, Style};
 use crate::app::Result;
 
 pub mod list;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Rect {
-    x: u16,
-    y: u16,
-    width: u16,
-    height: u16,
+    pub x: u16,
+    pub y: u16,
+    pub width: u16,
+    pub height: u16,
+}
+
+impl Rect {
+    pub fn decompose(&self) -> (u16, u16, u16, u16) {
+        (self.x, self.y, self.width, self.height)
+    }
 }
 
 impl Default for Rect {
@@ -23,6 +29,9 @@ impl Default for Rect {
 }
 
 pub trait View {
-    fn draw(&self, screen: &mut Screen) -> Result<()>;
+    fn draw(&mut self, screen: &mut Screen) -> Result<()>;
+    fn set_frame(&mut self, frame: Rect);
+    fn set_style(&mut self, style: Style);
+    fn style(&self) -> &Style;
     fn frame(&self) -> Rect;
 }

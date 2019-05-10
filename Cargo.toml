@@ -7,3 +7,4 @@ edition = "2018"
 [dependencies]
 git2 = "0.8"
 termion = "1.5.2"
+bitflags = "1.0"
