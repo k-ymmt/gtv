@@ -1,4 +1,5 @@
 mod app;
+mod logger;
 
 #[macro_use]
 extern crate bitflags;
