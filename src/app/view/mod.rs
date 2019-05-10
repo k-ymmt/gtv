@@ -1,3 +1,6 @@
+extern crate termion;
+
+use crate::app::event::Event;
 use crate::app::screen::{Screen, Style};
 use crate::app::Result;
 
@@ -34,4 +37,5 @@ pub trait View {
     fn set_style(&mut self, style: Style);
     fn style(&self) -> &Style;
     fn frame(&self) -> Rect;
+    fn receive_event(&mut self, event: Event) -> Result<()>;
 }

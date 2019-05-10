@@ -4,10 +4,16 @@ mod logger;
 #[macro_use]
 extern crate bitflags;
 
-use crate::app::{App};
-use crate::app::screen::{TermionScreen, Style, Fg, Bg, Color, Modifier};
+#[macro_use]
+extern crate crossbeam;
+
+extern crate chrono;
+
+use crate::app::screen::{Bg, Color, Fg, Modifier, Style, TermionScreen};
 use crate::app::view::list::{List, ListItem};
-use crate::app::view::{View, Rect};
+use crate::app::view::{Rect, View};
+use crate::app::{App, AppError};
+use crate::logger::Logger;
 
 fn main() {
     let mut list = List::new();
@@ -22,13 +28,18 @@ fn main() {
     list.set_style(Style {
         fg: Fg::new(Color::White),
         bg: Bg::new(Color::Black),
-        modifier: Modifier::empty()
+        modifier: Modifier::empty(),
     });
     list.set_highlight(Style {
         fg: Fg::new(Color::Black),
         bg: Bg::new(Color::LightWhite),
-        modifier: Modifier::empty()
+        modifier: Modifier::empty(),
     });
+
     let mut app = App::new(TermionScreen::new().unwrap(), list);
-    app.run().unwrap();
+    Logger::log("foo".to_string());
+    let r = app.run();
+    if let Err(err) = r {
+        Logger::log(format!("{:?}", err))
+    }
 }

@@ -1,12 +1,12 @@
-use std::io::{stdout, Stdout, Write};
-use termion::screen::AlternateScreen;
-use termion::raw::{IntoRawMode, RawTerminal};
-use termion::terminal_size;
-use crate::app::Result;
 use super::termion::color;
-use super::termion::style;
 use super::termion::color::Color as TColor;
+use super::termion::style;
+use crate::app::Result;
 use std::fmt;
+use std::io::{stdout, Stdout, Write};
+use termion::raw::{IntoRawMode, RawTerminal};
+use termion::screen::AlternateScreen;
+use termion::terminal_size;
 
 bitflags! {
     pub struct Modifier: u16 {
@@ -63,7 +63,7 @@ impl fmt::Display for Fg {
             Color::White => color::White.write_fg(f),
             Color::LightBlack => color::LightBlack.write_fg(f),
             Color::LightRed => color::LightRed.write_fg(f),
-            Color::LightGreen=> color::LightGreen.write_fg(f),
+            Color::LightGreen => color::LightGreen.write_fg(f),
             Color::LightYellow => color::LightYellow.write_fg(f),
             Color::LightBlue => color::LightBlue.write_fg(f),
             Color::LightMagenta => color::LightMagenta.write_fg(f),
@@ -96,7 +96,7 @@ impl fmt::Display for Bg {
             Color::White => color::White.write_bg(f),
             Color::LightBlack => color::LightBlack.write_bg(f),
             Color::LightRed => color::LightRed.write_bg(f),
-            Color::LightGreen=> color::LightGreen.write_bg(f),
+            Color::LightGreen => color::LightGreen.write_bg(f),
             Color::LightYellow => color::LightYellow.write_bg(f),
             Color::LightBlue => color::LightBlue.write_bg(f),
             Color::LightMagenta => color::LightMagenta.write_bg(f),
@@ -137,11 +137,14 @@ impl TermionScreen {
         let stdout = stdout().into_raw_mode()?;
 
         let mut screen = AlternateScreen::from(stdout);
-        write!(screen, "{}{}", termion::cursor::Goto(1, 1), termion::cursor::Hide)?;
-        screen.flush()?;
-        Ok(TermionScreen {
+        write!(
             screen,
-        })
+            "{}{}",
+            termion::cursor::Goto(1, 1),
+            termion::cursor::Hide
+        )?;
+        screen.flush()?;
+        Ok(TermionScreen { screen })
     }
 }
 
@@ -163,7 +166,8 @@ impl Screen for TermionScreen {
             write!(self.screen, "{}", style::NoItalic)?;
         }
         write!(
-            self.screen, "{}{}{}{}",
+            self.screen,
+            "{}{}{}{}",
             termion::cursor::Goto(x, y),
             style.fg,
             style.bg,

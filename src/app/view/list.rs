@@ -1,6 +1,8 @@
-use crate::app::view::{View, Rect};
+use super::termion::event::Key;
+use crate::app::event::Event;
 use crate::app::screen::{Screen, Style};
-use crate::app::{Result, AppError};
+use crate::app::view::{Rect, View};
+use crate::app::{AppError, Result};
 use std::ops::Range;
 
 #[derive(Clone)]
@@ -13,7 +15,6 @@ impl ListItem {
         ListItem { text }
     }
 }
-
 
 pub struct List {
     frame: Rect,
@@ -47,7 +48,7 @@ impl List {
     pub fn set_current_line(&mut self, line: usize) -> Result<()> {
         let limit = self.items.len() - 1;
         if line > limit {
-            return Err(AppError::OutOfBounds(limit));
+            return Err(AppError::OutOfBounds(line));
         }
 
         if self.current_line == line {
@@ -75,7 +76,6 @@ impl List {
         }
     }
 }
-
 
 impl View for List {
     fn draw(&mut self, screen: &mut Screen) -> Result<()> {
@@ -114,5 +114,28 @@ impl View for List {
 
     fn frame(&self) -> Rect {
         self.frame
+    }
+
+    fn receive_event(&mut self, event: Event) -> Result<()> {
+        match event {
+            Event::Key(key) => match key {
+                Key::Char('j') => {
+                    if self.current_line > self.items.len() - 1 {
+                        return Ok(());
+                    }
+                    self.set_current_line(self.current_line + 1)?;
+                }
+                Key::Char('k') => {
+                    if self.current_line == 0 {
+                        return Ok(());
+                    }
+                    self.set_current_line(self.current_line - 1)?;
+                }
+                _ => {}
+            },
+            _ => {}
+        };
+
+        Ok(())
     }
 }
